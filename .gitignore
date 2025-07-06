@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# TypeScript build output
+dist/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.*
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional: ignore compiled CLI if accidentally committed
+src/cli.js
