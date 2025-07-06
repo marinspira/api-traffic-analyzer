@@ -1,8 +1,8 @@
-# Log Analyzer Middleware Library
+# api-traffic-analyzer Middleware Library
 
 ## Overview
 
-`log-analyzer` is a lightweight **Express middleware library** that helps you:
+`api-traffic-analyzer` is a lightweight **Express middleware library** that helps you:
 
 - Track **unique IP addresses** accessing your API endpoints,
 - Assign each IP a **unique numeric ID** starting from 0,
@@ -27,7 +27,7 @@ This middleware makes it easy to add user v& IP analytics without building custo
 ## Installation
 
 ```bash
-npm install log-analyzer
+npm install api-traffic-analyzer
 npm install express          # Peer dependency, if not already installed
 npm install --save-dev @types/express
 ```
@@ -38,7 +38,7 @@ npm install --save-dev @types/express
 
 ```bash
 import express from 'express';
-import { logAnalyzer } from 'log-analyzer';
+import { logAnalyzer } from 'api-traffic-analyzer';
 
 const app = express();
 
@@ -57,7 +57,7 @@ Or apply selectively on specific routes:
 
 ```bash
 import express from 'express';
-import { logAnalyzer } from 'log-analyzer';
+import { logAnalyzer } from 'api-traffic-analyzer';
 
 router.get('/events', logAnalyzer, (req, res) => {
   res.send('Events data');
@@ -82,15 +82,15 @@ Example log line:
 2025-07-06T12:00:00Z ip=192.168.1.2 ip_id=0 user_id=1001 GET /api/login
 ```
 
-4. Add `analyzer` into your scripts in the folder `package.json` to be able to run `npm run analyzer` and see the logs details.
+4. Add `analyze` into your scripts in the folder `package.json` to be able to run `npm run analyze` and see the logs details.
 
 ```bash
 "scripts": {
-    "analyzer": "node ./node_modules/log-analyzer/dist/cli.js logs/users.log",
+    "analyze": "node ./node_modules/api-traffic-analyzer/dist/cli.js logs/users.log",
   }
 ```
 
-Run `npm run analyzer` and make requests in your application or in the endpoints you added it. The output should be something like:
+Run `npm run analyze` and make requests in your application or in the endpoints you added it. The output should be something like:
 
 ```bash
 Total unique users: 1

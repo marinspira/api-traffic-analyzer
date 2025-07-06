@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 program
-  .name('log-analyzer')
+  .name('api-traffic-analyzer')
   .description('Analyze API logs for users, endpoints, and IPs')
   .argument('<logfile>', 'Path to the log file')
   .action((logfile: string) => {

@@ -1,22 +1,22 @@
 {
-  "name": "log-analyzer",
-  "version": "1.0.0",
+  "name": "api-traffic-analyzer",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "log-analyzer": "ts-node src/cli.ts logs/users.log",
+    "api-traffic-analyzer": "ts-node src/cli.ts logs/users.log",
     "build": "tsc",
     "start": "ts-node src/cli.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "log-analyzer": "./dist/cli.js"
+    "api-traffic-analyzer": "./dist/cli.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["log", "analyzer", "api", "cli", "express", "ip"],
+  "author": "Maria Ferreira",
+  "license": "MIT",
+  "description": "Discover how many people are accessing your APIs, which endpoints they use, and from where.",
   "dependencies": {
     "commander": "^14.0.0"
   },
