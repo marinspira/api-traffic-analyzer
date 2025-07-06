@@ -9,8 +9,6 @@
 - Log API requests with details including timestamp, IP, IP ID, user ID, HTTP method, and endpoint path,
 - Produce logs in a standard format that can later be analyzed by a CLI tool or programmatically.
 
-![Output Screenshot](./assets/output.png)
-
 This middleware makes it easy to add user v& IP analytics without building custom logging from scratch.
 
 -----------------
@@ -36,7 +34,7 @@ npm install --save-dev @types/express
 
 ### Usage
 
-1. Import and apply the middleware in your Express app or router:
+1. Import and apply the middleware in your `index.js` file in your Express.js app or router:
 
 ```bash
 import express from 'express';
@@ -61,13 +59,9 @@ Or apply selectively on specific routes:
 import express from 'express';
 import { logAnalyzer } from 'log-analyzer';
 
-const router = express.Router();
-
 router.get('/events', logAnalyzer, (req, res) => {
   res.send('Events data');
 });
-
-app.use(router);
 ```
 
 2. Add a user-id header in requests to track users. 
@@ -84,29 +78,26 @@ user-id: 1001
 3. Logs are saved at `logs/users.log`
 
 Example log line:
-`2025-07-06T12:00:00Z ip=192.168.1.2 ip_id=0 user_id=1001 GET /api/login`
+```bash
+2025-07-06T12:00:00Z ip=192.168.1.2 ip_id=0 user_id=1001 GET /api/login
+```
 
 4. Add `analyzer` into your scripts in the folder `package.json` to be able to run `npm run analyzer` and see the logs details.
 
 ```bash
 "scripts": {
-    "analyzer": "ts-node src/cli.ts logs/users.log",
-  },
+    "analyzer": "node ./node_modules/log-analyzer/dist/cli.js logs/users.log",
+  }
 ```
 
-The output should be something like:
+Run `npm run analyzer` and make requests in your application or in the endpoints you added it. The output should be something like:
 
 ```bash
-Total unique users: 3
+Total unique users: 1
 
 📍 Endpoints accessed:
 - /api/login → 1 user(s): [1001]
-- /api/products → 2 user(s): [1002, 1003]
-- /api/orders → 1 user(s): [1001]
-- /api/profile → 1 user(s): [1002]
 
 Users by IP:
 - 192.168.1.2 → 1 user(s): [1001]
-- 192.168.1.3 → 1 user(s): [1002]
-- 192.168.1.4 → 1 user(s): [1003]
 ```
