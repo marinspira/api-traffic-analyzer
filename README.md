@@ -2,14 +2,22 @@
 
 ## Overview
 
-`api-traffic-analyzer` is a lightweight **Express middleware library** that helps you:
+Track and analyze who’s using your API, how often, and from where.
 
-- Track **unique IP addresses** accessing your API endpoints,
-- Assign each IP a **unique numeric ID** starting from 0,
-- Log API requests with details including timestamp, IP, IP ID, user ID, HTTP method, and endpoint path,
-- Produce logs in a standard format that can later be analyzed by a CLI tool or programmatically.
+api-traffic-analyzer is a lightweight Express middleware + CLI tool that helps you:
 
-This middleware makes it easy to add user v& IP analytics without building custom logging from scratch.
+- Monitor unique visitors by IP (with auto-assigned numeric IDs)
+- Optionally identify users with persistent cookies
+- Automatically log each request's timestamp, IP, user ID, method, and endpoint
+- Store logs in a simple text format for later analysis
+- Use a CLI tool to inspect API traffic and usage patterns
+
+
+## Features
+- Easy to drop into any Express-based app
+- In-memory IP-to-ID mapping for tracking sessions
+- Cookie-based user fingerprinting (optional, configurable)
+- CLI support to analyze usage per endpoint, per user, per IP
 
 -----------------
 
@@ -34,7 +42,7 @@ npm install --save-dev @types/express
 
 ### Usage
 
-1. Import and apply the middleware in your `index.js` file in your Express.js app or router:
+1 - Import and apply the middleware in your `index.js` file in your Express.js app or router:
 
 ```bash
 import express from 'express';
@@ -64,7 +72,7 @@ router.get('/events', logAnalyzer, (req, res) => {
 });
 ```
 
-2. Add a user-id header in requests to track users. 
+2 - Add a user-id header in requests to track users. 
 If user-id is missing, it defaults to "unknown" in logs.
 
 The middleware looks for user-id in request headers:
@@ -75,14 +83,14 @@ Host: example.com
 user-id: 1001
 ```
 
-3. Logs are saved at `logs/users.log`
+3 - Logs are saved at `logs/users.log`
 
 Example log line:
 ```bash
-2025-07-06T12:00:00Z ip=192.168.1.2 ip_id=0 user_id=1001 GET /api/login
+2025-07-06T12:00:00Z ip=192.168.1.2 ip_id=0 user_id=[cookie_or_header_user_id] GET /api/login
 ```
 
-4. Add `analyze` into your scripts in the folder `package.json` to be able to run `npm run analyze` and see the logs details.
+4 - Add `analyze` into your scripts in the folder `package.json` to be able to run `npm run analyze` and see the logs details.
 
 ```bash
 "scripts": {
@@ -101,3 +109,53 @@ Total unique users: 1
 Users by IP:
 - 192.168.1.2 → 1 user(s): [1001]
 ```
+
+----------
+
+## 🍪 Optional: Cookie-based user tracking
+
+If your API doesn’t already provide a `user-id` in the request headers (such as authenticated sessions or tokens), the `api-traffic-analyzer` can **automatically generate and assign a unique user ID via cookies**.
+
+This allows you to identify unique users across multiple requests **even without authentication**.
+
+---
+
+### Why use cookies?
+
+Without a user ID in the request header, tracking how many unique users access your API would be based solely on IP addresses—which can change or be shared. To improve accuracy, the middleware sets a persistent cookie (`api-traffic-analyzer_uid`) with a unique UUID for each client.
+
+### Setup Steps
+
+1 - **Install [`cookie-parser`](https://www.npmjs.com/package/cookie-parser):**
+
+```bash
+npm install cookie-parser
+```
+
+2 - Apply it before logAnalyzer in your Express app:
+
+```bash
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import { logAnalyzer } from 'api-traffic-analyzer';
+
+app.use(cookieParser());   // 👈 Required for cookie-based tracking
+app.use(logAnalyzer);      // Now supports automatic user ID via cookies
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+```
+
+### About the Cookie
+- Name: `api-traffic-analyzer_uid`
+- Type: httpOnly (not accessible from client-side JavaScript)
+- Duration: 1 year
+- Purpose: Identify unique users anonymously in your log file
+
+## Example Log Entry With Cookie
+```bash
+2025-07-06T21:03:55.560Z ip=192.168.1.2 ip_id=0 user_id=3c80a32b-021c-4aa3-a867-22fc3a90e924 GET /api-docs/
+```
+
+If your app already sets a user-id in headers, this cookie-based fallback will not override it—it’s completely optional.
