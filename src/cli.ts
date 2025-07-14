@@ -49,12 +49,12 @@ program
 
     console.log('\n📍 Endpoints accessed:');
     for (const [endpoint, userSet] of Object.entries(endpointMap)) {
-      console.log(`- ${endpoint} → ${userSet.size} user(s): [${[...userSet].join(', ')}]`);
+      console.log(`- ${endpoint} → ${userSet.size} user(s)`);
     }
 
     console.log('\n🌐 Users by IP:');
     for (const [ip, userSet] of Object.entries(ipMap)) {
-      console.log(`- ${ip} → ${userSet.size} user(s): [${[...userSet].join(', ')}]`);
+      console.log(`- ${ip} → ${userSet.size} user(s)`);
     }
   });
 
