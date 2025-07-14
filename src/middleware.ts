@@ -42,7 +42,8 @@ export function logAnalyzer(req: Request, res: Response, next: NextFunction) {
   const url = req.originalUrl;
   const timestamp = new Date().toISOString();
 
-  const logLine = `${timestamp} ip=${ip} ip_id=${ipId} user_id=${userId} ${method} ${url}\n`;
+  // const logLine = `${timestamp} ip=${ip} ip_id=${ipId} user_id=${userId} ${method} ${url}\n`;
+  const logLine = `${timestamp} ip=${ip} ip_id=${ipId} user_id=${userId} ${method} ${url}${require('os').EOL}`;
   fs.appendFileSync(logFilePath, logLine);
 
   next();
