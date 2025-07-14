@@ -16,7 +16,8 @@ const COOKIE_NAME = 'api-traffic-analyzer_uid';
 
 export function logAnalyzer(req: Request, res: Response, next: NextFunction) {
   // Handle IP normalization
-  const rawIp = req.ip || req.socket.remoteAddress || 'unknown';
+  const forwarded = req.headers['x-forwarded-for'];
+  const rawIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : req.ip || req.socket.remoteAddress || 'unknown';
   const ip = rawIp === '::1' ? '127.0.0.1' : rawIp;
 
   // Track IPs (optional)
